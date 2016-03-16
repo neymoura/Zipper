@@ -38,7 +38,7 @@ public class Worker implements Runnable {
 
         absoluteWorkTime = endTime - startTime;
 
-        System.out.println("File: "+ file.getName() +" took "+ absoluteWorkTime/1000 +" seconds");
+        System.out.println("File: "+ file.getName() +" took "+ absoluteWorkTime +" miliseconds");
 
         workerListener.workerFinished(this.threadId, absoluteWorkTime);
 

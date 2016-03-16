@@ -64,7 +64,7 @@ public class WorkManager implements WorkerListener{
         }
 
         //compressao terminou, contabilize o tempo
-        System.out.print("Jobs done! I took " + absoluteTime/1000 + " seconds to compress " + filesToCompressCount + " files using " + threadQuantity + " thread(s)!");
+        System.out.print("Jobs done! I took " + absoluteTime + " miliseconds to compress " + filesToCompressCount + " files using " + threadQuantity + " thread(s)!");
 
     }
 

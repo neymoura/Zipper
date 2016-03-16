@@ -25,7 +25,7 @@ public class Main {
 
         WorkManager manager = new WorkManager(filesArray);
 
-        manager.start(WorkManager.SINGLE_THREAD);
+        manager.start(WorkManager.MULTIPLE_THREADS);
 
     }
 
