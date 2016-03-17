@@ -1,6 +1,5 @@
-package br.unifor.sd.zipper.thread;
+package br.unifor.sd.zipper.worker;
 
-import br.unifor.sd.zipper.listener.WorkerListener;
 import br.unifor.sd.zipper.utils.Compactador;
 
 import java.io.File;
@@ -10,7 +9,9 @@ import java.io.File;
  */
 public class Worker implements Runnable {
 
-    private long absoluteWorkTime = 0l;
+    private static final String TAG = "Worker";
+
+    private long absoluteWorkTime = 0L;
     private File file;
     private int threadId;
     private WorkerListener workerListener;
@@ -38,7 +39,7 @@ public class Worker implements Runnable {
 
         absoluteWorkTime = endTime - startTime;
 
-        System.out.println("File: "+ file.getName() +" took "+ absoluteWorkTime +" miliseconds");
+        System.out.println(TAG+": ["+threadId+"] Compression finished! File: "+ file.getName() +" took "+ absoluteWorkTime +" miliseconds");
 
         workerListener.workerFinished(this.threadId, absoluteWorkTime);
 

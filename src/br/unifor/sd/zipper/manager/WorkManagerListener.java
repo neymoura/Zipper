@@ -1,4 +1,4 @@
-package br.unifor.sd.zipper.listener;
+package br.unifor.sd.zipper.manager;
 
 /**
  * Created by ney on 3/16/16.

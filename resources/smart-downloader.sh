@@ -2,6 +2,7 @@
 set -e
 
 #fSizes=('1Mb' '10Mb' '100Mb')
+#fSizes=('1Mb' '10Mb')
 fSizes=('1Mb')
 
 nFiles=(10 100 500)
