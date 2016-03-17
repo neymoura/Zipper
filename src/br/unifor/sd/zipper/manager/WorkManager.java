@@ -1,5 +1,6 @@
 package br.unifor.sd.zipper.manager;
 
+import br.unifor.sd.zipper.listener.WorkManagerListener;
 import br.unifor.sd.zipper.listener.WorkerListener;
 import br.unifor.sd.zipper.thread.Worker;
 
@@ -23,18 +24,21 @@ public class WorkManager implements WorkerListener{
 
     private long absoluteTime = 0l;
 
-    public WorkManager(ArrayList<File> filesArray) {
+    private String jobId;
+    private WorkManagerListener workManagerListener;
+
+    public WorkManager(ArrayList<File> filesArray, WorkManagerListener workManagerListener) {
         this.filesArray = filesArray;
-
         this.filesToCompressCount = this.filesArray.size();
-
+        this.workManagerListener = workManagerListener;
     }
 
-    public void start(int threadMode){
+    public void start(int threadMode, String jobId){
 
+        this.jobId = jobId;
         this.threadMode = threadMode;
 
-        int threadQuantity = 0;
+        int threadQuantity;
 
         switch (threadMode) {
             case SINGLE_THREAD:
@@ -65,6 +69,10 @@ public class WorkManager implements WorkerListener{
 
         //compressao terminou, contabilize o tempo
         System.out.print("Jobs done! I took " + absoluteTime + " miliseconds to compress " + filesToCompressCount + " files using " + threadQuantity + " thread(s)!");
+
+        if(this.workManagerListener != null){
+            workManagerListener.jobFinished(this.jobId, absoluteTime);
+        }
 
     }
 
