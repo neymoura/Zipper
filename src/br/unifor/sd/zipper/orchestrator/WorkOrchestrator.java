@@ -162,7 +162,7 @@ public class WorkOrchestrator implements WorkManagerListener {
                 if(resultsFile.exists() && resultsFile.canWrite()){
                     BufferedWriter out = new BufferedWriter(new FileWriter(resultsFile, true));
 
-                    out.append("Date/Time" + "\t" + "System Cores" + "\t" + "JVM RAM" + "\t" + "Folder" + "\t" + "Time (milliseconds)");
+                    out.append("Date/Time" + "\t" + "System Cores" + "\t" + "JVM RAM" + "\t" + "Thread mode" + "\t" + "Folder" + "\t" + "Time (milliseconds)");
 
                     out.flush();
                     out.close();
@@ -174,7 +174,7 @@ public class WorkOrchestrator implements WorkManagerListener {
             }
         }
 
-        String line = sdf.format(new Date()) + "\t" + coresAvailable + "\t" + (maxMemory == Long.MAX_VALUE ? "0" : humanReadableByteCount(maxMemory, true)) + "\t" + jobId + "\t" + absoluteTime;
+        String line = sdf.format(new Date()) + "\t" + coresAvailable + "\t" + (maxMemory == Long.MAX_VALUE ? "0" : humanReadableByteCount(maxMemory, true)) + "\t" + (this.threadMode==WorkManager.MULTIPLE_THREADS?"Multiple":"Single") + "\t" + jobId + "\t" + absoluteTime;
 
         //Verifica o arquivo de log pode ser escrito
         if (resultsFile.exists() && resultsFile.canWrite()) {

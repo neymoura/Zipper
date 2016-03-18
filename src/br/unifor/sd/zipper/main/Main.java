@@ -29,7 +29,7 @@ public class Main {
         HashMap<String, String> parsedArgs = parseArgs(args);
 
         ignoreDownload = (parsedArgs.containsKey(IGNORE_DOWNLOAD_PARAMETER)?Boolean.parseBoolean(parsedArgs.get(IGNORE_DOWNLOAD_PARAMETER).toLowerCase()):false);
-        threadMode = (parsedArgs.containsKey(THREAD_MODE_PARAMETER)?parsedArgs.get(IGNORE_DOWNLOAD_PARAMETER).toLowerCase():MULTIPLE_THREAD_VALUE);
+        threadMode = (parsedArgs.containsKey(THREAD_MODE_PARAMETER)?parsedArgs.get(THREAD_MODE_PARAMETER).toLowerCase():MULTIPLE_THREAD_VALUE);
         numberOfRuns = (parsedArgs.containsKey(NUMBER_OF_RUNS_PARAMETER)?Integer.parseInt(parsedArgs.get(NUMBER_OF_RUNS_PARAMETER)):1);
 
         if(!ignoreDownload){

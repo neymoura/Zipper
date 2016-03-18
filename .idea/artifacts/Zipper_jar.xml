@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Zipper:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Zipper_jar</output-path>
+    <root id="archive" name="Zipper.jar">
+      <element id="module-output" name="Zipper" />
+    </root>
+  </artifact>
+</component>
