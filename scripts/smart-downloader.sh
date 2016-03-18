@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-#fSizes=('1Mb' '10Mb' '100Mb')
+fSizes=('1Mb' '10Mb' '100Mb')
 #fSizes=('1Mb' '10Mb')
-fSizes=('1Mb')
+#fSizes=('1Mb')
 
-#nFiles=(10 100 500)
+nFiles=(10 100 500)
 #nFiles=(10 100)
-nFiles=(10)
+#nFiles=(10)
 
 echo "[smart-downloader] Starting..."
 
