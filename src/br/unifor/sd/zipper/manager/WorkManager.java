@@ -75,7 +75,7 @@ public class WorkManager implements WorkerListener{
         System.out.println(TAG+": ["+jobId+"] Jobs finished! I took " + absoluteTime + " miliseconds to compress " + filesToCompressCount + " files using " + threadQuantity + " worker(s)!" );
 
         if(this.workManagerListener != null){
-            workManagerListener.jobFinished(this.jobId, absoluteTime);
+            workManagerListener.workManagerFinished(this.jobId, absoluteTime);
         }
 
     }

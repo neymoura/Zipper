@@ -23,16 +23,23 @@ public class WorkOrchestrator implements WorkManagerListener {
 
     private static final String TAG = "WorkOrchestrator";
 
+    private final WorkOrchestratorListener workOrchestratorListener;
+
     private List<File> dirList = null;
 
     private List<File> toCleanDirs = null;
 
-    public WorkOrchestrator() {
+    private int threadMode = WorkManager.MULTIPLE_THREADS;
+
+    public WorkOrchestrator(WorkOrchestratorListener workOrchestratorListener) {
         this.dirList = new ArrayList<>();
         this.toCleanDirs = new ArrayList<>();
+        this.workOrchestratorListener = workOrchestratorListener;
     }
 
-    public void start() {
+    public void start(int threadMode) {
+
+        this.threadMode = threadMode;
 
         //1. Localizar diretorios
         //2. Rodar WorkManager com todos arquivos de um diretorio
@@ -48,6 +55,10 @@ public class WorkOrchestrator implements WorkManagerListener {
 //        return f.getSelectedFiles();
 
         System.out.println(TAG + ": Starting orchestrator...");
+
+        //limpa objetos, necessário caso o start esteja sendo invocado novamente
+        this.dirList = new ArrayList<>();
+        this.toCleanDirs = new ArrayList<>();
 
         //Procurando diretórios
         File[] files = new File(".").listFiles();
@@ -104,34 +115,40 @@ public class WorkOrchestrator implements WorkManagerListener {
 
         //finish orchestrator
         System.out.println(TAG + ": Finishing orchestrator...");
-        System.exit(0);
+
+        workOrchestratorListener.workOrchestrationFinished();
 
     }
 
     private void runManager(File directory) {
 
+        if(directory == null){
+            return;
+        }
+
         List<File> files = Arrays.asList(directory.listFiles());
 
         WorkManager workManager = new WorkManager(files, this);
 
-        workManager.start(WorkManager.MULTIPLE_THREADS, directory.getPath());
+        workManager.start(threadMode, directory.getPath());
 
     }
 
     @Override
-    public void jobFinished(String jobId, long absoluteTime) {
+    public void workManagerFinished(String jobId, long absoluteTime) {
 
         //Guarda resultados em um arquivo
-        armazenaResultado(jobId, absoluteTime);
+        saveResultsToFile(jobId, absoluteTime);
 
         //Vai para próximo diretório
         runManager(dequeDirectory());
 
     }
 
-    private void armazenaResultado(String jobId, long absoluteTime) {
+    private void saveResultsToFile(String jobId, long absoluteTime) {
 
         int coresAvailable = Runtime.getRuntime().availableProcessors();
+        long maxMemory = Runtime.getRuntime().maxMemory();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy kk:mm");
 
@@ -141,11 +158,23 @@ public class WorkOrchestrator implements WorkManagerListener {
         if (!resultsFile.exists()) {
             try {
                 resultsFile.createNewFile();
-            } catch (IOException e) {
+
+                if(resultsFile.exists() && resultsFile.canWrite()){
+                    BufferedWriter out = new BufferedWriter(new FileWriter(resultsFile, true));
+
+                    out.append("Date/Time" + "\t" + "System Cores" + "\t" + "JVM RAM" + "\t" + "Folder" + "\t" + "Time (milliseconds)");
+
+                    out.flush();
+                    out.close();
+                }
+
+            } catch (Exception e) {
                 System.err.println("Falha ao criar arquivo de log : " + e.getMessage());
                 e.printStackTrace();
             }
         }
+
+        String line = sdf.format(new Date()) + "\t" + coresAvailable + "\t" + (maxMemory == Long.MAX_VALUE ? "0" : humanReadableByteCount(maxMemory, true)) + "\t" + jobId + "\t" + absoluteTime;
 
         //Verifica o arquivo de log pode ser escrito
         if (resultsFile.exists() && resultsFile.canWrite()) {
@@ -155,7 +184,7 @@ public class WorkOrchestrator implements WorkManagerListener {
                 BufferedWriter out = new BufferedWriter(new FileWriter(resultsFile, true));
 
                 out.newLine();
-                out.append(sdf.format(new Date()) + "\t" + coresAvailable + "\t" + jobId + "\t" + absoluteTime);
+                out.append(line);
 
                 out.flush();
                 out.close();
@@ -169,9 +198,17 @@ public class WorkOrchestrator implements WorkManagerListener {
         }
 
         //printa log no console
-        System.out.println(sdf.format(new Date()) + "\t" + coresAvailable + "\t" + jobId + "\t" + absoluteTime);
+        System.out.println(line);
 
 
+    }
+
+    private static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
 }
