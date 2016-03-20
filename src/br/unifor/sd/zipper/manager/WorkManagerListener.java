@@ -5,6 +5,6 @@ package br.unifor.sd.zipper.manager;
  */
 public interface WorkManagerListener {
 
-    void workManagerFinished(String jobId, long absoluteTime);
+    void workManagerFinished(String jobId, long absoluteTime, String fileType, int fileCount, long fileSize);
 
 }

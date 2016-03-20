@@ -46,14 +46,6 @@ public class WorkOrchestrator implements WorkManagerListener {
         //3. Guardar em um arquivo o tempo de compressao do diretório
         //4. Ir para próximo diretório
 
-//        JFileChooser f = new JFileChooser();
-//        f.setCurrentDirectory(new File("."));
-//        f.setMultiSelectionEnabled(true);
-//        f.setFileSelectionMode(JFileChooser.FILES_ONLY);
-//        f.showSaveDialog(null);
-//
-//        return f.getSelectedFiles();
-
         System.out.println(TAG + ": Starting orchestrator...");
 
         //limpa objetos, necessário caso o start esteja sendo invocado novamente
@@ -135,22 +127,22 @@ public class WorkOrchestrator implements WorkManagerListener {
     }
 
     @Override
-    public void workManagerFinished(String jobId, long absoluteTime) {
+    public void workManagerFinished(String jobId, long absoluteTime, String fileType, int fileCount, long fileSize) {
 
         //Guarda resultados em um arquivo
-        saveResultsToFile(jobId, absoluteTime);
+        saveResultsToFile(jobId, absoluteTime, fileType, fileCount, fileSize);
 
         //Vai para próximo diretório
         runManager(dequeDirectory());
 
     }
 
-    private void saveResultsToFile(String jobId, long absoluteTime) {
+    private void saveResultsToFile(String jobId, long absoluteTime, String fileType, int fileCount, long fileSize) {
 
         int coresAvailable = Runtime.getRuntime().availableProcessors();
         long maxMemory = Runtime.getRuntime().maxMemory();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy kk:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy kk:mm:ss");
 
         File resultsFile = new File("results.txt");
 
@@ -162,7 +154,7 @@ public class WorkOrchestrator implements WorkManagerListener {
                 if(resultsFile.exists() && resultsFile.canWrite()){
                     BufferedWriter out = new BufferedWriter(new FileWriter(resultsFile, true));
 
-                    out.append("Date/Time" + "\t" + "System Cores" + "\t" + "JVM RAM" + "\t" + "Thread mode" + "\t" + "Folder" + "\t" + "Time (milliseconds)");
+                    out.append("Date/Time" + "\t" + "System Cores" + "\t" + "JVM RAM" + "\t" + "Thread mode" + "\t" + "Folder" + "\t" + "File type" + "\t" + "File count" + "\t" + "File size" + "\t" + "Time (milliseconds)");
 
                     out.flush();
                     out.close();
@@ -174,7 +166,7 @@ public class WorkOrchestrator implements WorkManagerListener {
             }
         }
 
-        String line = sdf.format(new Date()) + "\t" + coresAvailable + "\t" + (maxMemory == Long.MAX_VALUE ? "0" : humanReadableByteCount(maxMemory, true)) + "\t" + (this.threadMode==WorkManager.MULTIPLE_THREADS?"Multiple":"Single") + "\t" + jobId + "\t" + absoluteTime;
+        String line = sdf.format(new Date()) + "\t" + coresAvailable + "\t" + (maxMemory == Long.MAX_VALUE ? "0" : humanReadableByteCount(maxMemory, true)) + "\t" + (this.threadMode==WorkManager.MULTIPLE_THREADS?"Multiple":"Single") + "\t" + jobId + "\t" + fileType + "\t" + fileCount + "\t" + humanReadableByteCount(fileSize,true) + "\t" + absoluteTime;
 
         //Verifica o arquivo de log pode ser escrito
         if (resultsFile.exists() && resultsFile.canWrite()) {

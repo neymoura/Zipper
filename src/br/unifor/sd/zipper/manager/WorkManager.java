@@ -26,7 +26,10 @@ public class WorkManager implements WorkerListener{
 
     private long absoluteTime = 0L;
 
+    //jobId, absoluteTime, fileType, fileCount, fileSize
     private String jobId;
+    private String fileType;
+    private long fileSize;
     private WorkManagerListener workManagerListener;
 
     public WorkManager(List<File> filesArray, WorkManagerListener workManagerListener) {
@@ -75,7 +78,7 @@ public class WorkManager implements WorkerListener{
         System.out.println(TAG+": ["+jobId+"] Jobs finished! I took " + absoluteTime + " miliseconds to compress " + filesToCompressCount + " files using " + threadQuantity + " worker(s)!" );
 
         if(this.workManagerListener != null){
-            workManagerListener.workManagerFinished(this.jobId, absoluteTime);
+            workManagerListener.workManagerFinished(this.jobId, absoluteTime, this.fileType, this.filesToCompressCount, this.fileSize);
         }
 
     }
@@ -92,7 +95,10 @@ public class WorkManager implements WorkerListener{
     }
 
     @Override
-    public void workerFinished(int threadId, long absoluteTime) {
+    public void workerFinished(int threadId, long absoluteTime, String fileType, long fileSize) {
+
+        this.fileType = fileType;
+        this.fileSize = fileSize;
 
         this.compressedFilesCount++;
 

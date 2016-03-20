@@ -5,6 +5,6 @@ package br.unifor.sd.zipper.worker;
  */
 public interface WorkerListener {
 
-    void workerFinished(int threadId, long absoluteTime);
+    void workerFinished(int threadId, long absoluteTime, String fileType, long fileSize);
 
 }

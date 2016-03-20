@@ -41,7 +41,7 @@ public class Worker implements Runnable {
 
         System.out.println(TAG+": ["+threadId+"] Compression finished! File: "+ file.getName() +" took "+ absoluteWorkTime +" miliseconds");
 
-        workerListener.workerFinished(this.threadId, absoluteWorkTime);
+        workerListener.workerFinished(this.threadId, absoluteWorkTime, getFileType(), getFileSize());
 
     }
 
@@ -53,11 +53,31 @@ public class Worker implements Runnable {
             e.printStackTrace();
         }
 
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+    }
+
+    private String getFileType(){
+
+        if(file == null){
+            return "";
+        }
+
+        String name = file.getName();
+
+        try {
+            return name.substring(name.lastIndexOf(".") + 1);
+        } catch (Exception e) {
+            return "";
+        }
+
+    }
+
+    private long getFileSize(){
+
+        if(file == null){
+            return 0L;
+        }
+
+        return file.length();
 
     }
 
