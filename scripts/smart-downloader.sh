@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-#fSizes=('1Mb' '10Mb' '100Mb')
+fSizes=('1Mb' '10Mb' '100Mb')
 #fSizes=('1Mb' '10Mb')
-fSizes=('1Mb')
+#fSizes=('1Mb')
 
-nFiles=(10 100 500)
+nFiles=(10 100 250)
 #nFiles=(10 100)
 #nFiles=(10)
 
@@ -51,5 +51,64 @@ for fSize in ${fSizes[*]};
 
     done
 
-echo "[smart-downloader] Jobs done!"
 
+#10 100 250
+
+base64 /dev/urandom | head -c 1000000 > file1Mb.txt #1mb
+
+base64 /dev/urandom | head -c 10000000 > file10Mb.txt #10mb
+
+base64 /dev/urandom | head -c 100000000 > file100Mb.txt #100mb
+
+for nFile in ${nFiles[*]};
+    do
+
+#################### 1 Mb ####################
+
+        if [ -d $nFile"f-1Mb-txt" ]; then
+            rm -rf $nFile"f-1Mb-txt"
+        fi
+
+        echo "[smart-downloader] Creating dir $nFile'f-1Mb-txt..."
+        mkdir $nFile"f-1Mb-txt"
+
+        for (( i=1; i<= nFile; i++ ));
+            do
+                cp "file1Mb.txt" $nFile"f-1Mb-txt/file1Mb"$i".txt"
+            done
+
+#################### 10 Mb ####################
+
+        if [ -d $nFile"f-10Mb-txt" ]; then
+            rm -rf $nFile"f-10Mb-txt"
+        fi
+
+        echo "[smart-downloader] Creating dir $nFile'f-10Mb-txt..."
+        mkdir $nFile"f-10Mb-txt"
+
+        for (( i=1; i<= nFile; i++ ));
+            do
+                cp "file10Mb.txt" $nFile"f-10Mb-txt/file10Mb"$i".txt"
+            done
+
+#################### 100 Mb ####################
+
+        if [ -d $nFile"f-100Mb-txt" ]; then
+            rm -rf $nFile"f-100Mb-txt"
+        fi
+
+        echo "[smart-downloader] Creating dir $nFile'f-100Mb-txt..."
+        mkdir $nFile"f-100Mb-txt"
+
+        for (( i=1; i<= nFile; i++ ));
+            do
+                cp "file100Mb.txt" $nFile"f-100Mb-txt/file100Mb"$i".txt"
+            done
+
+    done
+
+#base64 /dev/urandom | head -c 100000000 > file.txt #100mb
+#base64 /dev/urandom | head -c 10000000 > file.txt #10mb
+#base64 /dev/urandom | head -c 1000000 > file.txt #1mb
+
+echo "[smart-downloader] Jobs done!"

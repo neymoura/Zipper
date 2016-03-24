@@ -7,6 +7,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+/**
+ * Easter egg
+ */
 public class Main {
 
     private static final String TAG = "Zipper";
