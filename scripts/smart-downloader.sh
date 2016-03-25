@@ -5,7 +5,7 @@ set -e
 fSizes=('1Mb' '10Mb')
 #fSizes=('1Mb')
 
-nFiles=(10 100 200)
+nFiles=(10 100 200 300)
 #nFiles=(10 100)
 #nFiles=(10)
 
@@ -105,10 +105,10 @@ for nFile in ${nFiles[*]};
 #                cp "file100Mb.txt" $nFile"f-100Mb-txt/file100Mb"$i".txt"
 #            done
 #
-#    done
-
 #base64 /dev/urandom | head -c 100000000 > file.txt #100mb
 #base64 /dev/urandom | head -c 10000000 > file.txt #10mb
 #base64 /dev/urandom | head -c 1000000 > file.txt #1mb
+
+    done
 
 echo "[smart-downloader] Jobs done!"
